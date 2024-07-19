@@ -80,8 +80,10 @@ export default {
     INVALID_REFFRRAL_CODE: "Invalid or expired referral code",
     EMAIL_ALREADY_EXIST:
       "Email has been used. Please log in or change password it was used by you in the past.",
-    INVALID_EMAIL:
+    INVALID_EMAIL:    
       "Email does not exist on our solution. Please register to use Sendam",
+    EMAIL_JOB: " Email job added to the queue successfully",
+    EMAIL_JOB_FAIL: 'Failed to add email job to the queue',
     PHONE_ALREADY_EXIST: "Phone number has been used by another user",
     NOT_A_USER: "User does not exist",
     USERNAME_ALREADY_EXIST: "email has been used by another user",

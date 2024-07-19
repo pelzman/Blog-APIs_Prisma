@@ -2,12 +2,16 @@ import { Request, Response, NextFunction } from "express";
 import AuthService from "../services/AuthService";
 import Validate from "../utils/validation";
 import config from "../utils/config";
+import AuditTrailService from "../services/AuditTrailService";
+
 class AuthController {
   protected authService: AuthService;
   protected validate: Validate;
+  private auditTrailService: AuditTrailService;
   constructor() {
     this.authService = new AuthService();
     this.validate = new Validate();
+    this.auditTrailService = new AuditTrailService();
   }
   async registerUser(req: Request, res: Response, next: NextFunction) {
     try {
@@ -19,6 +23,18 @@ class AuthController {
           message: error.details[0].message,
         });
       const user = await this.authService.HandleregisterUser(req.body);
+
+      await this.auditTrailService.HandleCreateAuditTrail({
+        action: "CREATE",
+        entity: "signup",
+        entityId: user.id,
+        userId: user.id,
+        details: {
+          userName: user.firstname,
+          userEmail: user.email,
+          description: `${user.firstname}, signup an account at ${new Date()}`,
+        },
+      });
       return res.status(config.HTTP_CODES.SUCCESS).json({
         status: config.HTTP_CODES.SUCCESS,
         message: config.RESPONSE_MESSAGES.CLIENT_CREATED,
@@ -39,6 +55,18 @@ class AuthController {
         res
           .status(config.HTTP_CODES.BAD_REQUEST)
           .json(config.RESPONSE_MESSAGES.INVALID_CREDENTIAL);
+
+      await this.auditTrailService.HandleCreateAuditTrail({
+        action: "CREATE",
+        entity: "login",
+        entityId: user.user.id,
+        userId: user.user.id,
+        details: {
+          userName: user.user.firstname,
+          userEmail: user.user.email,
+          description: `${user.user.email}, login  at ${new Date()}`,
+        },
+      });
       return res.status(config.HTTP_CODES.SUCCESS).json({
         status: config.HTTP_CODES.SUCCESS,
         message: config.RESPONSE_MESSAGES.USER_LOGIN,

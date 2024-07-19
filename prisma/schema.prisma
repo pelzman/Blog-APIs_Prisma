@@ -51,7 +51,20 @@ model Like {
   postId  Int
   
 }
+
+model AuditTrail {
+  id  Int  @id @default(autoincrement())  
+  action String  
+  entity String
+  entityId Int
+  details  Json @default("{}")
+  userId Int
+  timeStamp DateTime @default(now())  
+}
+
 enum Role {
   USER 
   ADMIN 
 }
+
+

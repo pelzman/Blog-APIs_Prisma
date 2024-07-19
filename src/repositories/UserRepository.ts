@@ -1,5 +1,5 @@
-import { User } from "@prisma/client";
-import { Prisma, PrismaClient } from "@prisma/client";
+
+import { Prisma, PrismaClient,  User } from "@prisma/client";
 import BaseReponsitory from "./BaseRepository";
 
 class UserRepository extends BaseReponsitory<

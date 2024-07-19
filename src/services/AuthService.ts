@@ -7,10 +7,13 @@ import {
 } from "../utils/jwt";
 import UserRepository from "../repositories/UserRepository";
 
+
 class AuthService {
   private userRepository: UserRepository;
+  
   constructor() {
     this.userRepository = new UserRepository();
+   
   }
   async HandleregisterUser(credential: User) {
     try {
@@ -20,6 +23,7 @@ class AuthService {
       if (userExist) throw new Error("User already exist");
       credential.password = await hash(credential.password, 10);
       const user = await this.userRepository.create(credential);
+
       return user;
     } catch (error: any) {
       console.log(error.message);
@@ -34,7 +38,7 @@ class AuthService {
       if (!isPasswordValid) throw new Error("Incorrect Password");
       const accessToken = await generateAccessToken(user);
       const refreshToken = await generateRefreshToken(user);
-
+  
       return { user, accessToken, refreshToken };
     } catch (error: any) {
       throw new Error(error.message || "Internal Server Error");
